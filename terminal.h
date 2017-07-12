@@ -4,7 +4,7 @@
 #include "types.h"
 #include "string.h"
 
-static word* const TERMINAL_BUFFER = 0xB8000;
+static word* const TERMINAL_BUFFER = (word*) 0xB8000;
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
@@ -62,7 +62,7 @@ static inline void terminal_clear(word entry)
 
 static inline void terminal_put_vga_entry(word entry, size_t x, size_t y)
 {
-    const index = y * VGA_WIDTH + x;
+    const size_t index = y * VGA_WIDTH + x;
     TERMINAL_BUFFER[index] = entry;
 }
 
@@ -82,7 +82,7 @@ static inline terminal_scroll()
 
     for (x = 0; x < VGA_WIDTH; x++)
     {
-        const index = (VGA_HEIGHT-1) * VGA_WIDTH + x;
+        const size_t index = (VGA_HEIGHT-1) * VGA_WIDTH + x;
         TERMINAL_BUFFER[index] = vga_entry(' ', terminal_color);
     }
 
@@ -128,7 +128,7 @@ static inline void terminal_write_char(unsigned char c)
     }
 }
 
-static inline void terminal_write_str(unsigned char* str)
+static inline void terminal_write_str(char* str)
 {
     size_t len, i;    
     len = strlen(str);

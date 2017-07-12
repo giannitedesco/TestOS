@@ -30,6 +30,7 @@ testos : $(TARGET)
 environment.o : environment.asm
 boot.o : boot.asm
 kernel.o : kernel.c
+string.o: string.c
 
 #Rules
 %.o : %.c
