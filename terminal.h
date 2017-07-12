@@ -4,11 +4,11 @@
 #include "types.h"
 #include "string.h"
 
-static word* const TERMINAL_BUFFER = 0xB8000;
+static volatile word* const TERMINAL_BUFFER = (word *)0xB8000;
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
-enum vga_color 
+enum vga_color
 {
     VGA_COLOR_BLACK = 0,
     VGA_COLOR_BLUE = 1,
@@ -62,11 +62,11 @@ static inline void terminal_clear(word entry)
 
 static inline void terminal_put_vga_entry(word entry, size_t x, size_t y)
 {
-    const index = y * VGA_WIDTH + x;
+    const size_t index = y * VGA_WIDTH + x;
     TERMINAL_BUFFER[index] = entry;
 }
 
-static inline terminal_scroll()
+static inline void terminal_scroll()
 {
     size_t x,y;
 
@@ -74,15 +74,15 @@ static inline terminal_scroll()
     {
         for (x = 0; x < VGA_WIDTH; x++)
         {
-            const index = y * VGA_WIDTH + x;
-            const prev_index = (y-1) * VGA_WIDTH + x;
+            const size_t index = y * VGA_WIDTH + x;
+            const size_t prev_index = (y-1) * VGA_WIDTH + x;
             TERMINAL_BUFFER[prev_index] = TERMINAL_BUFFER[index];
         }
     }
 
     for (x = 0; x < VGA_WIDTH; x++)
     {
-        const index = (VGA_HEIGHT-1) * VGA_WIDTH + x;
+        const size_t index = (VGA_HEIGHT-1) * VGA_WIDTH + x;
         TERMINAL_BUFFER[index] = vga_entry(' ', terminal_color);
     }
 
@@ -128,9 +128,9 @@ static inline void terminal_write_char(unsigned char c)
     }
 }
 
-static inline void terminal_write_str(unsigned char* str)
+static inline void terminal_write_str(char* str)
 {
-    size_t len, i;    
+    size_t len, i;
     len = strlen(str);
 
     for (i = 0; i < len; i++)
