@@ -3,13 +3,6 @@
 
 #include "types.h"
 
-size_t strlen(const char *str)
-{
-    char* ptr = str;
-    while (*ptr)
-        ptr++;
-
-    return (size_t)ptr - (size_t)str;
-}
+size_t strlen(const char *str);
 
 #endif
